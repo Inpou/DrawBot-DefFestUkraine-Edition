@@ -1,7 +1,7 @@
 package com.deeplocal.drawbot;
 
 import com.google.android.things.pio.Gpio;
-import com.google.android.things.pio.PeripheralManagerService;
+import com.google.android.things.pio.PeripheralManager;
 
 import java.io.IOException;
 
@@ -29,7 +29,7 @@ public class DRV8834 {
 
     public void open() throws IOException {
 
-        PeripheralManagerService manager = new PeripheralManagerService();
+        PeripheralManager manager = PeripheralManager.getInstance();
 
         mStepGpio = manager.openGpio(mStepPin);
         mStepGpio.setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW);

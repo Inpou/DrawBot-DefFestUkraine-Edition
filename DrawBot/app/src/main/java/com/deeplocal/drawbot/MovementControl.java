@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.android.things.contrib.driver.pwmservo.Servo;
+import com.google.android.things.pio.PeripheralManager;
+import com.google.android.things.pio.Pwm;
 import com.polidea.androidthings.driver.steppermotor.Direction;
 import com.polidea.androidthings.driver.steppermotor.driver.StepDuration;
 import com.polidea.androidthings.driver.uln2003.driver.ULN2003;
@@ -23,16 +25,16 @@ public class MovementControl {
     private static final int RAMP_MIN_SLEEP = 800000;
     private static final int RAMP_RATE = 50000;
 
-    private static final String[] leftMotorPins = { "GPIO_10", "GPIO_128", "GPIO_35" };
-    private static final String[] rightMotorPins = { "GPIO_39", "GPIO_37", "GPIO_32" };
-    private static final String penServoPin = "PWM1";
+    private static final String[] leftMotorPins = { "GPIO2_IO03", "GPIO1_IO10", "GPIO5_IO00" };
+    private static final String[] rightMotorPins = { "GPIO2_IO02", "GPIO2_IO00", "GPIO2_IO07" };
+    private static final String penServoPin = "PWM2";
 
     private int right_turn_count = 0;
     private int left_turn_count = 0;
 
     private DRV8834 mLeftStepper;
     private DRV8834 mRightStepper;
-    private Servo mPenServo;
+    private Pwm mPenServo;
 
     private RobotConfig mRobotConfig;
 
@@ -50,9 +52,9 @@ public class MovementControl {
         }
 
         try {
-            mPenServo = new Servo(penServoPin);
-            mPenServo.setPulseDurationRange(1, 2); // according to your servo's specifications
-            mPenServo.setAngleRange(0, 180);       // according to your servo's specifications
+            mPenServo = PeripheralManager.getInstance().openPwm(penServoPin);
+            mPenServo.setPwmFrequencyHz(120); // according to your servo's specifications
+//            mPenServo.setAngleRange(0, 180);       // according to your servo's specifications
             mPenServo.setEnabled(true);
             setMarkerPressure(0);
         } catch (IOException e) {
@@ -273,11 +275,11 @@ public class MovementControl {
     }
 
     public void movePen(int angle) {
-        try {
-            mPenServo.setAngle(angle);
-        } catch (IOException e) {
-            Log.e(TAG, "Could not set angle on pen servo", e);
-        }
+//        try {
+//            mPenServo.set(angle);
+//        } catch (IOException e) {
+//            Log.e(TAG, "Could not set angle on pen servo", e);
+//        }
     }
 
     public void close() {

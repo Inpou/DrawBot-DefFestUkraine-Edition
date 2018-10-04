@@ -30,7 +30,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.things.pio.Gpio;
 import com.google.android.things.pio.GpioCallback;
-import com.google.android.things.pio.PeripheralManagerService;
+import com.google.android.things.pio.PeripheralManager;
 
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
@@ -46,6 +46,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 public class MainActivity extends Activity implements ImageReader.OnImageAvailableListener {
+
 
     static {
         if (!OpenCVLoader.initDebug()) {
@@ -81,7 +82,9 @@ public class MainActivity extends Activity implements ImageReader.OnImageAvailab
 
     public static int mKioskNum = 0;
 
-    private static final String BUTTON_PIN_NAME = "GPIO_174"; // GPIO port wired to the button
+    public static final String BUTON_PULLUP_GPIO = "GPIO6_IO14";
+    private static final String BUTTON_PIN_NAME = "GPIO6_IO15"; // GPIO port wired to the button
+
     private static final int DEBOUNCE_MILLIS = 333;
     private static final int BLIP_STEPPERS_INTERVAL = 30000; // milliseconds
     private static final boolean UPDATE_SCREEN = false;
@@ -199,10 +202,10 @@ public class MainActivity extends Activity implements ImageReader.OnImageAvailab
         // initialize gpio input and set callback for falling edge
         try {
 
-            PeripheralManagerService manager = new PeripheralManagerService();
+            PeripheralManager manager = PeripheralManager.getInstance();
 
             // button uses this as pullup
-            Gpio buttonPullupGpio = manager.openGpio("GPIO_175");
+            Gpio buttonPullupGpio = manager.openGpio(BUTON_PULLUP_GPIO);
             buttonPullupGpio.setDirection(Gpio.DIRECTION_OUT_INITIALLY_HIGH);
 
             mButtonGpio = manager.openGpio(BUTTON_PIN_NAME);
@@ -506,8 +509,7 @@ public class MainActivity extends Activity implements ImageReader.OnImageAvailab
                     Log.d(TAG, "Button done debouncing");
                 }
             }, DEBOUNCE_MILLIS);
-
-            return super.onGpioEdge(gpio);
+            return true;
         }
 
         @Override

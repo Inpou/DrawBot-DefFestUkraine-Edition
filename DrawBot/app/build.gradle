@@ -26,7 +26,7 @@ dependencies {
     })
     compile 'com.android.support:design:25.3.1'
     testCompile 'junit:junit:4.12'
-    provided 'com.google.android.things:androidthings:0.5-devpreview'
+    provided 'com.google.android.things:androidthings:0.7-devpreview'
     compile 'com.google.android.things.contrib:driver-button:0.3'
     compile project(':openCVLibrary24133')
     compile 'com.polidea.androidthings.driver:uln2003:2.0.2'
